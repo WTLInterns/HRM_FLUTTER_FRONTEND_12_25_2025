@@ -53,4 +53,15 @@ class AppTextStyles {
 
     color: AppColours.gray,
   );
+   static const TextStyle heading3 = TextStyle(
+    fontSize: 18,
+    color: AppColours.onPrimary,
+    fontWeight: FontWeight.w600
+  );
+   static const TextStyle heading5 = TextStyle(
+    fontSize: 14,
+    color: AppColours.blue,
+    fontWeight: FontWeight.w200
+  );
+  
 }

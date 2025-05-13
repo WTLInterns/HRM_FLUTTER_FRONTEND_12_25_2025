@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:hrm_project/res/app_colour.dart';
 import 'package:hrm_project/res/app_styles.dart';
-import 'package:hrm_project/screens/dashbord/dashboard.dart';
-import 'package:hrm_project/screens/forget/forget_password.dart';
+import 'package:hrm_project/res/validation.dart';
 import 'package:hrm_project/screens/login/login.dart';
 
 
@@ -123,9 +122,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   /// Email Field
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Email is required*'),
-                    ]),
+                  //  validator: Validation.validateEmail,
                     controller: emailController,
                     style: AppTextStyles.appbar,
                     decoration: InputDecoration(
@@ -162,9 +159,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     controller: passwordController,
                     style: AppTextStyles.appbar,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Password is required*'),
-                    ]),
+                     validator: Validation.validateNewPassword,
                     decoration: InputDecoration(
                   
                       prefixIcon: Icon(Icons.lock),
@@ -205,13 +200,12 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                   /// Password Field
                   TextFormField(
+                     
                     obscureText: !_obscureText,
                     controller: ConfirmpasswordController,
                     style: AppTextStyles.appbar,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Password is required*'),
-                    ]),
+                    validator: (value) => Validation.validateConfirmPassword(value, passwordController.text),
                     decoration: InputDecoration(
                   
                       prefixIcon: Icon(Icons.lock),

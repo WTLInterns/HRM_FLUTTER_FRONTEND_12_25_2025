@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:hrm_project/controller/auth_controller.dart';
 import 'package:hrm_project/res/app_colour.dart';
 import 'package:hrm_project/res/app_styles.dart';
+import 'package:hrm_project/res/validation.dart';
 import 'package:hrm_project/screens/dashbord/dashboard.dart';
 import 'package:hrm_project/screens/login/login.dart';
 import 'package:hrm_project/screens/reset/reset_password.dart';
+
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
@@ -18,12 +21,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     TextEditingController passwordController=TextEditingController();
     bool _obscureText = false;
     final _formKey = GlobalKey<FormState>();
+    bool _isLoading = false;
 
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
+  
+
 
     @override
   Widget build(BuildContext context) {
@@ -120,9 +126,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   /// Email Field
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Email is required*'),
-                    ]),
+                      validator: Validation.validateEmail ,
                     controller: emailController,
                     style: AppTextStyles.appbar,
                     decoration: InputDecoration(

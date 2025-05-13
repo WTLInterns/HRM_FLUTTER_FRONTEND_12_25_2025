@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:hrm_project/res/app_colour.dart';
 import 'package:hrm_project/res/app_styles.dart';
+import 'package:hrm_project/res/validation.dart';
 import 'package:hrm_project/screens/dashbord/dashboard.dart';
 import 'package:hrm_project/screens/forget/forget_password.dart';
 
@@ -103,9 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   /// Email Field
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Email is required*'),
-                    ]),
+                     //validator: Validation.validateEmail,
                     controller: emailController,
                     style: AppTextStyles.appbar,
                     decoration: InputDecoration(
@@ -142,9 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: passwordController,
                     style: AppTextStyles.appbar,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Password is required*'),
-                    ]),
+                  //  validator: Validation.validatePassword,
                     decoration: InputDecoration(
                   
                       prefixIcon: Icon(Icons.lock),

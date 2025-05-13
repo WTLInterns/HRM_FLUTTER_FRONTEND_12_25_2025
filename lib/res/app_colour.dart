@@ -20,7 +20,8 @@ class AppColours {
   static const Color onBackground = Color(0xFF000000);
   static const Color onSurface = Color(0xFF000000);
   static const Color onError = Color(0xFFFFFFFF);
+    static const Color newColour = Color(0xFF6082B6);
   static const Color fill3 = Color.fromARGB(115, 45, 39, 39);
-    static const Color backgroundColour = Color.fromARGB(255, 83, 86, 87);
+    static const Color backgroundColour = Color.fromARGB(255, 83, 86, 87); //6082B6
 
 }
