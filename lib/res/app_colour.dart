@@ -6,7 +6,9 @@ class AppColours {
   static const Color secondary = Color(0xFF03DAC6);
    static const Color blue = Colors.blue;
       static const Color blue2 = Color(0XFF191970);
-  static const Color fillColour = Color.fromARGB(255, 11, 65, 94);
+            static const Color blue3 = Color.fromARGB(255, 83, 83, 94);
+
+  static const Color fillColour = Color.fromARGB(255, 51, 68, 77);
     static const Color fill2 = Color(0xFF7393B3);
 
 
@@ -20,8 +22,9 @@ class AppColours {
   static const Color onBackground = Color(0xFF000000);
   static const Color onSurface = Color(0xFF000000);
   static const Color onError = Color(0xFFFFFFFF);
-    static const Color newColour = Color(0xFF6082B6);
+    static const Color newColour = Color(0xFF6082B6);//
   static const Color fill3 = Color.fromARGB(115, 45, 39, 39);
+   static const Color fill4 = Color(0XFF4682B4);
     static const Color backgroundColour = Color.fromARGB(255, 83, 86, 87); //6082B6
 
 }

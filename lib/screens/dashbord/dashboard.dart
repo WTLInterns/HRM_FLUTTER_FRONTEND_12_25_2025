@@ -1,37 +1,68 @@
-import 'package:flutter/material.dart';
-import 'package:hrm_project/res/app_colour.dart';
-import 'package:hrm_project/res/app_styles.dart';
-import 'package:hrm_project/screens/add_employee/add_employee.dart';
-import 'package:hrm_project/screens/login/login.dart';
+
+
+import 'package:hrm_project/res/imports.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  // const DashboardScreen({Key? key,  this.email}) : super(key: key);
+  // final String? email;
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  String userName = 'Arbaj Pvt Ltd';
-  String userSubtitle = 'Hrm DashBoard';
-  String profileImage = 'assets/profile.png'; 
+    final AuthController _controller = AuthController();
 
-  void logout() {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen())); 
-   
-  }
+  String fullName = '';
+  String role = 'EMPLOYEE'; 
+  String imageUrl = '';
+  String companyName = '';
+      String defaultPassword = 'arbaj1234';
 
-  void navigateTo(String page) {
-    Navigator.pop(context); 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Navigated to $page')),
-    );
-  }
 
   @override
+  void initState() {
+    super.initState();
+    _loadCredentialsAndFetchData();
+  }
+  Future<void> _loadCredentialsAndFetchData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  String? savedEmail = prefs.getString('email');
+  String? savedPassword = prefs.getString('password');
+
+  print('Saved Email: $savedEmail');
+  print('Saved Password: $savedPassword');
+
+  if (savedEmail != null && savedPassword != null) {
+    _fetchEmployeeData(savedEmail, savedPassword);
+  } else {
+    print('No saved credentials found');
+  }
+}
+
+  Future<void> _fetchEmployeeData(String email, String password) async {
+  final data = await _controller.loginEmployee(email, password);
+ 
+
+  if (data != null) {
+    setState(() {
+      fullName = "${data['firstName']} ${data['lastName']}";
+      role = data['jobRole'] ?? 'EMPLOYEE';
+      imageUrl = data['empimg'] ?? '';
+    });
+            debugPrint("$fullName,$role,$imageUrl,$companyName");
+
+  }
+}
+
+
+  
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Dashboard'),
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -41,189 +72,115 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       drawer: Drawer(
   child: Container(
-    color: const Color.fromARGB(255, 50, 60, 77),
-    child: ListView(
-      padding: EdgeInsets.zero,
-    //  physics: NeverScrollableScrollPhysics(),  // Disable scrolling behavior
-
+    
+    color: AppColours.gray, 
+    child: Column(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
+       
+        Container(
+          height: 210,
+          width: double.infinity,
+          color: AppColours.blue2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              Container(
+                width: 75,
+                height: 75,
+                decoration: const BoxDecoration(
+                  color: AppColours.blue,
+                  shape: BoxShape.circle,
+                ),
+                child: ClipOval(
+                  child: imageUrl.isNotEmpty
+                      ? Image.network(imageUrl, fit: BoxFit.cover)
+                      : const Icon(Icons.person, size: 50, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(fullName, style: AppTextStyles.heading3),
+              Text(role, style: AppTextStyles.heading5),
+            ],
           ),
+        ),
+
+        // ListTiles in scrollable area
+        Expanded(
           child: Container(
-            height: 210, // Set an explicit height
-            color: AppColours.blue2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+            color: Colors.grey[200], 
+            child: ListView(
+              padding: EdgeInsets.zero,
               children: [
+                ListTile(
+                  leading: const Icon(Icons.person, color: AppColours.blue),
+                  title: const Text('Profile'),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.assignment, color: AppColours.blue),
+                  title: const Text('View Attendance Record'),
+                  onTap: ()=> Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ViewRecord()),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.assignment_turned_in, color: AppColours.blue),
+                  title: const Text('Add Attendence'),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AttendanceFormPage()),
+                  ),
+                ),
+                 ListTile(
+                  leading: const Icon(Icons.event_busy, color: AppColours.blue),
+                  title: const Text('Leave'),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LeaveForm()),
+                  ),
+                ),
                 SizedBox(
-                  height: 30,
+                height: MediaQuery.of(context).size.height*0.35,
                 ),
                 Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.blue, width: 3),
-                  ),
-                  child: CircleAvatar(
-                    radius: 35,
-                    backgroundImage: AssetImage(profileImage),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(userName, style: AppTextStyles.heading3),
-                Text(userSubtitle, style: AppTextStyles.heading5),
+  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  decoration: BoxDecoration(
+    color: AppColours.error, 
+    borderRadius: BorderRadius.circular(10),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black26,
+        blurRadius: 4,
+        offset: Offset(0, 2),
+      ),
+    ],
+  ),
+  child: ListTile(
+    leading: const Icon(Icons.logout, color: AppColours.onPrimary),
+    
+    title: const Text('Logout',style: AppTextStyles.heading3, ),
+    onTap: () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    },
+  ),
+),
+
+               
+              
               ],
-            ),
-          ),
-        ),
-
-        // Profile ListTile
-        ListTile(
-          leading: const Icon(Icons.person, color: AppColours.blue),
-          title: const Text('Profile', style: AppTextStyles.Style),
-        ),
-
-        // View Attendance ListTile
-        ListTile(
-          leading: const Icon(Icons.assignment, color: AppColours.blue),
-          title: const Text('View Attendence', style: AppTextStyles.Style),
-        ),
-
-        // Add Employees ListTile
-        ListTile(
-          leading: const Icon(Icons.co_present, color: AppColours.blue),
-          title: const Text('Add Employees', style: AppTextStyles.Style),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddEmployee()),
-          ),
-        ),
-
-        // Extra space between ListTiles and the logout button
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.4,
-        ),
-
-        // Logout Button
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ElevatedButton.icon(
-            onPressed: logout,
-            icon: const Icon(Icons.logout, color: AppColours.onPrimary),
-            label: const Text(
-              'Logout',
-              style: AppTextStyles.buttonStyle,
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              minimumSize: const Size.fromHeight(50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
             ),
           ),
         ),
       ],
     ),
   ),
-));
-
-//       drawer: Drawer(
-//         child:Container(
-//                color: const Color.fromARGB(255, 50, 60, 77),
-
-//         child: ListView(
-//           padding: EdgeInsets.zero,
-//           children: [
-//              DrawerHeader(
-//         decoration: const BoxDecoration(color: AppColours.blue2),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Container(
-//   width: 75, 
-//   height: 75,
-//   decoration: BoxDecoration(
-//     shape: BoxShape.circle,
-//     border: Border.all(color: Colors.blue, width: 3),
-//   ),
-//   child: CircleAvatar(
-//     radius: 35,
-//     backgroundImage: AssetImage(profileImage),
-//   ),),
-           
-//             const SizedBox(height: 10),
-//             Text(
-//               userName,
-//               style:AppTextStyles.heading3
-//             ),
-//             Text(
-//               userSubtitle,
-//               style: AppTextStyles.heading5
-//             ),
-//           ],
-//         ),
-//       ),
-//        ListTile(
-//               leading: const Icon(Icons.person,color: AppColours.blue,),
-//               title: const Text('Profile',style: AppTextStyles.Style,),
-//             //  onTap: () => navigateTo('Dashboard'),
-//             ),
-//             ListTile(
-//               leading: const Icon(Icons.receipt_long,color: AppColours.blue),
-//               title: const Text('View Attendence',style: AppTextStyles.Style,),
-//              // onTap: () => navigateTo('Employees'),
-//             ),
-//             ListTile(
-//               leading: const Icon(Icons.co_present,color: AppColours.blue),
-//               title: const Text('Add Employess',style: AppTextStyles.Style,),
-//               onTap: () =>Navigator.push(context, MaterialPageRoute(builder: (context)=>AddEmployee())),
-//             ),
-//           // const Divider(),
-//            SizedBox(
-//             height: MediaQuery.of(context).size.height*0.4,
-//            ),
-//            Padding(
-//   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//   child: ElevatedButton.icon(
-//     onPressed: logout,
-//     icon: const Icon(Icons.logout, color: AppColours.onPrimary),
-//     label: const Text(
-//       'Logout',
-//       style: AppTextStyles.buttonStyle,
-//     ),
-//     style: ElevatedButton.styleFrom(
-//       backgroundColor: Colors.red,
-//       minimumSize: const Size.fromHeight(50), // Optional: full-width button
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(8),
-//       ),
-//     ),
-//   ),
-// ),
-
-//           //  ListTile(
-//           //     leading: const Icon(Icons.logout, color: Colors.red),
-//           //     title: const Text('Logout', style: TextStyle(color: Colors.red)),
-//           //     onTap: logout,
-//           //   ),
-//         ],
-//         ),
-        
-//       ),
-      
-//       // body: const Center(
-//       //   child: Text(
-//       //     'Welcome to Dashboard!',
-//       //     style: TextStyle(fontSize: 20),
-//       //   ),
-//       // ),
-//     ));
+), 
+    );
   }
 }

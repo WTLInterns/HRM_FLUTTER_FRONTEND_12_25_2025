@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:hrm_project/screens/login/login.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+
+
+import 'package:hrm_project/res/imports.dart';
 
 class splashScreen extends StatefulWidget {
   @override

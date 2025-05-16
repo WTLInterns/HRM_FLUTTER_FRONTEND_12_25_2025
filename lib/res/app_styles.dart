@@ -23,6 +23,11 @@ class AppTextStyles {
     fontSize: 12,
     color: AppColours.onBackground,
   );
+   static const TextStyle caption2 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: AppColours.onBackground,
+  );
    static const TextStyle title = TextStyle(
     fontSize: 16,
     color: AppColours.primary,
@@ -45,7 +50,7 @@ class AppTextStyles {
     color: AppColours.onPrimary,
   );
   static const TextStyle Style = TextStyle(
-    fontSize: 16,
+    fontSize: 14,
     color: AppColours.onPrimary,
   );
    static const TextStyle hintText = TextStyle(
@@ -62,6 +67,11 @@ class AppTextStyles {
     fontSize: 14,
     color: AppColours.blue,
     fontWeight: FontWeight.w200
+  );
+   static const TextStyle tableRows= TextStyle(
+    fontSize: 16,
+    color: AppColours.onPrimary,
+    fontWeight: FontWeight.bold
   );
   
 }
